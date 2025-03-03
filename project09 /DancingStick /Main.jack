@@ -1,0 +1,223 @@
+class Main {
+    function void main() {
+        var Stick stick;
+        var int delay;
+        var int key;
+        var Array seq;
+        var int currentStep;
+        var int totalSteps;
+
+        do showHomeScreen();
+        do showSecondScreen();
+
+        // Initialize variables
+        let stick = Stick.new(); // Instantiate the Stick object
+        let delay = 10; // Delay in milliseconds
+        let key = 0; // Initialize key state
+        let seq = Array.new(8);
+        let currentStep = 0; 
+
+        do Output.moveCursor(7, 15);
+        do Output.printString("Follow the dance moves!!"); 
+        
+        let seq[0] = 132; // Right
+        let seq[1] = 130; // Left
+        let seq[2] = 133; // Down
+        let seq[3] = 132; // Right
+        let seq[4] = 130; // Left
+        let seq[5] = 131; // Up
+        let seq[6] = 133; // Down
+        let seq[7] = 131; // Up
+        //let seq[8] = 131; // Up
+        //let seq[9] = 133; // Down
+       // let seq[10] = 132; // Right
+       // let seq[11] = 130; // Left
+        //let seq[12] = 131; // Up
+       // let seq[13] = 133; // Down
+        //let seq[14] = 132; // Right
+
+        // Main animation loop
+        while (true) {
+            do displayInstruction(seq[currentStep]);
+            // Get the currently pressed key
+            let key = Keyboard.keyPressed();
+
+            if (key=seq[currentStep]){
+               let currentStep = currentStep + 1; 
+               if (currentStep = 8) {
+                    do Screen.clearScreen();
+                    do Output.printString("     Success! youve finsihed the game!");
+                    do seq.dispose();
+                    do stick.dispose();
+                    return; // Exit the program
+                }
+                do Screen.clearScreen(); 
+            }
+            // Check if the right arrow key (131) is pressed
+            if (key=132) { 
+                do Main.animateRight(stick, delay); // Run the right animation sequence
+            } if (key=131) {
+                do Main.animateUp(stick, delay); // Run the right animation sequence
+            }if (key=130) {
+                do Main.animateLeft(stick, delay); // Run the right animation sequence
+            } if (key=133) {
+                do Main.animateDown(stick, delay); // Run the right animation sequence
+            }else {
+                do stick.baseStick(); // Display the base stick figure
+            }
+
+            do Sys.wait(delay); // Add a delay to prevent excessive screen refresh
+        }
+        return;
+    }
+
+    method void showHomeScreen() {
+    var int key;
+
+    // Display the first screen: Title and initial "Press ENTER"
+    do Screen.clearScreen();
+    do Output.moveCursor(12, 20);
+    do Output.printString("THE DANCING STICKMAN");
+    do Output.moveCursor(14, 18);
+    do Output.printString("Press ENTER to continue");
+
+    // Wait for the first ENTER press
+    while (true) {
+        let key = Keyboard.keyPressed();
+        if (key = 128) { // Check for ENTER key
+            return; // Exit the method
+        }
+    } return;
+}
+
+    method void showSecondScreen() {
+        var int key;
+        var Stick stick;
+        var int delay;
+
+        // Initialize stickman and delay
+        let stick = Stick.new();
+        let delay = 10;
+
+        // Display the second screen: Message and "Press ENTER"
+        do Screen.clearScreen();
+        do Output.moveCursor(2, 1); // Display message at the top
+        do Output.printString("for the full experience, while enjoying the game");
+        do Output.moveCursor(3, 1);
+        do Output.printString("play 'Walking On A Dream' by Empire Of The Sun");
+        do Output.moveCursor(12, 20); // Display the second "Press ENTER"
+        do Output.printString("Press ENTER until you start moving");
+
+        // Animate the stickman while waiting for the second ENTER press
+        while (true) {
+            do Main.animateDown(stick, delay);
+
+            // Check for ENTER key press
+            let key = Keyboard.keyPressed();
+            if (key = 128) { // Check for ENTER key
+                do Screen.clearScreen();
+                do stick.dispose(); // Dispose the stickman object
+                return; // Exit the method
+            }
+        }return;
+    }
+
+    method void displayInstruction(int targetKey) {
+        if (targetKey = 130) { // Left arrow
+            do Output.moveCursor(15, 10);
+            do Output.printString("Press Left!");
+        }  if (targetKey = 131) { // Up arrow
+            do Output.moveCursor(15, 10);
+            do Output.printString("Press Up!");
+        }  if (targetKey = 132) { // Right arrow
+            do Output.moveCursor(15, 10);
+            do Output.printString("Press Right!");
+        }  if (targetKey = 133) { // Down arrow
+            do Output.moveCursor(15, 10);
+            do Output.printString("Press Down!");
+        }
+        return;
+    }
+
+    /** Animates the stick figure moving right */
+    function void animateRight(Stick stick, int delay) {
+        do stick.right01();
+        do delayHelper(delay);
+
+        do stick.right02();
+        do delayHelper(delay);
+
+        do stick.right03();
+        do delayHelper(delay);
+
+        do stick.right04();
+        do delayHelper(delay);
+
+        return;
+    }
+
+    /** Animates the stick figure moving left */
+    function void animateLeft(Stick stick, int delay) {
+        do stick.left01();
+        do delayHelper(delay);
+
+        do stick.left02();
+        do delayHelper(delay);
+
+        do stick.left03();
+        do delayHelper(delay);
+
+        do stick.left01();
+        do delayHelper(delay);
+
+
+        return;
+    }
+
+    /** Animates the stick figure moving down */
+    function void animateDown(Stick stick, int delay) {
+        do stick.down01();
+        do delayHelper(delay);
+
+        do stick.down02();
+        do delayHelper(delay);
+
+        do stick.down03();
+        do delayHelper(delay);
+
+        do stick.down02();
+        do delayHelper(delay);
+
+        return;
+    }
+
+    /** Animates the stick figure moving up */
+    function void animateUp(Stick stick, int delay) {
+        do stick.up01();
+        do delayHelper(delay);
+
+        do stick.up02();
+        do delayHelper(delay);
+        do stick.up01();
+        do delayHelper(delay);
+
+        do stick.up02();
+        do delayHelper(delay);
+
+
+        return;
+    }
+
+    method void delayHelper(int delay){
+        var int i;
+        let i = 0;
+        while (i<4){
+            do Sys.wait(delay);
+            let i=i+1;
+        }
+        return;
+    }
+
+        
+
+}
